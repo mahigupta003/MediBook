@@ -1,0 +1,13 @@
+### Get all doctors
+GET http://localhost:8080/api/doctors
+
+### Add a doctor
+POST http://localhost:8080/api/doctors
+Content-Type: application/json
+
+{
+  "name": "Dr. Amit Kumar",
+  "specialization": "Cardiologist",
+  "email": "amit@example.com",
+  "consultationFee": 500
+}
