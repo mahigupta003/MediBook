@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080').replace(/\/+$/, '')
+
 function formatAppointmentDateTime(value) {
   if (!value) return 'Not available'
   const date = new Date(value)
@@ -28,7 +30,7 @@ function App() {
   const [rescheduleErrors, setRescheduleErrors] = useState({})
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/doctors')
+    fetch(`${API_BASE_URL}/api/doctors`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Unable to load doctors')
@@ -64,7 +66,7 @@ const handleBooking = async (event) => {
   setBookingLoading(true)
 
   try {
-    const response = await fetch('http://localhost:8080/api/appointments', {
+    const response = await fetch(`${API_BASE_URL}/api/appointments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(appointment)
@@ -101,7 +103,7 @@ const handleSearchAppointments = async (event) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
+      `${API_BASE_URL}/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
     )
 
     if (!response.ok) {
@@ -130,7 +132,7 @@ const handleSearchAppointments = async (event) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/appointments/${appointmentId}/cancel`,
+      `${API_BASE_URL}/api/appointments/${appointmentId}/cancel`,
       { method: 'PUT' }
     )
 
@@ -142,7 +144,7 @@ const handleSearchAppointments = async (event) => {
     alert('Appointment cancelled successfully!')
 
     const searchResponse = await fetch(
-      `http://localhost:8080/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
+      `${API_BASE_URL}/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
     )
 
     if (searchResponse.ok) {
@@ -165,7 +167,7 @@ const handleRescheduleAppointment = async (appointmentId) => {
   try {
     const query = new URLSearchParams({ newDateTime })
     const response = await fetch(
-      `http://localhost:8080/api/appointments/${appointmentId}/reschedule?${query}`,
+      `${API_BASE_URL}/api/appointments/${appointmentId}/reschedule?${query}`,
       { method: 'PUT' }
     )
 
@@ -175,7 +177,7 @@ const handleRescheduleAppointment = async (appointmentId) => {
     }
 
     const searchResponse = await fetch(
-      `http://localhost:8080/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
+      `${API_BASE_URL}/api/appointments/search?email=${encodeURIComponent(searchEmail)}`
     )
     if (!searchResponse.ok) {
       throw new Error('Appointment was rescheduled, but the list could not be refreshed. Search again to see the updated time.')
